@@ -33,4 +33,9 @@ class Site
     {
         return "Hello World";
     }
+
+    public static function getCollection($collectionName)
+    {
+        return $collectionName;
+    }
 }
