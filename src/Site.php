@@ -13,11 +13,9 @@ namespace Monte;
 class Site
 {
 
+    private $monteBaseUrl = '';
 
-
-    private $base = '';
-
-    private $key = '';
+    private $developerToken = '';
 
     /**
      * Sample method
@@ -51,7 +49,6 @@ class Site
     }
 
 
-
     /**
      * Get a row from a collection
      *
@@ -67,6 +64,5 @@ class Site
     {
         return $rowId;
     }
-
 
 }
