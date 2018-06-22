@@ -64,7 +64,7 @@ class Site
      */
     public static function getRow($collectionName, $rowId)
     {
-        return $rowId;
+        return base64_encode($rowId);
     }
 
 }
