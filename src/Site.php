@@ -64,6 +64,6 @@ class Site
      */
     public static function getRow($collectionName, $rowId)
     {
-        return $rowId;
+        return $collectionName . '-' . $rowId;
     }
 }
