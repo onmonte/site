@@ -34,6 +34,7 @@ class Site
         return "Hello World";
     }
 
+
     /**
      * Get a collection from the theme
      *
