@@ -52,7 +52,7 @@ class Site
 
 
     /**
-     * Get a collection row from the theme
+     * Get a row from a collection
      *
      * Always create a corresponding docblock for each method, describing what it is for,
      * this helps the phpdocumentator to properly generator the documentation
