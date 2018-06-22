@@ -63,7 +63,6 @@ class Site
      *
      * @return string
      */
-
     public static function getRow($collectionName, $rowId)
     {
         return $rowId;
