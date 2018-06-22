@@ -14,6 +14,7 @@ class Site
 {
 
     private $base = '';
+
     private $key = '';
 
     /**
