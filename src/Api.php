@@ -25,49 +25,57 @@ class Api
     {
         Api::setVariables();
 
-        $params = [
-            'fd' => $_SERVER['HTTP_HOST'],
-            'clauses' => $clauses,
-            'data' => $data,
-        ];
+        $uniqueKey = base64_encode($type . urlencode($route) . serialize($clauses) . serialize($data));
 
-        $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/');
+        $response = Cache::make($uniqueKey, 1, function () use ($type, $route, $clauses, $data) {
+            $params = [
+                'fd' => $_SERVER['HTTP_HOST'],
+                'clauses' => $clauses,
+                'data' => $data,
+            ];
 
-        $ch = curl_init();
+            $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/');
 
-        curl_setopt($ch, CURLOPT_URL, $curlUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $ch = curl_init();
 
-        switch (strtolower(trim($type))) {
-            case 'get':
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-                break;
+            curl_setopt($ch, CURLOPT_URL, $curlUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
-            case 'post':
-                curl_setopt($ch, CURLOPT_POST, 1);
-                break;
+            switch (strtolower(trim($type))) {
+                case 'get':
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+                    break;
 
-            case 'put':
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-                break;
+                case 'post':
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    break;
 
-            case 'delete':
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-                break;
-        }
+                case 'put':
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+                    break;
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+                case 'delete':
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+                    break;
+            }
 
-        $result = curl_exec($ch);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
 
-        if (curl_errno($ch)) {
-            return curl_error($ch);
-        }
+            $result = curl_exec($ch);
 
-        curl_close($ch);
+            if (curl_errno($ch)) {
+                return curl_error($ch);
+            }
 
-        return json_decode($result, true);
+            curl_close($ch);
+
+            $decodedResult = json_decode($result, true);
+
+            return $decodedResult;
+        });
+
+        return $response;
     }
 }
