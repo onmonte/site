@@ -4,30 +4,34 @@ namespace Monte;
 
 class Api
 {
-    public static $apiKey;
+    public static $apiDeveloperKey;
 
-    public static $apiDomain;
+    public static $apiSiteDomain;
 
-    public static $apiBase;
+    public static $apiSiteBase;
 
     const VERSION = '1.0';
 
-    public function __construct()
+    public static function setVariables()
     {
-        $this::$apiDomain = $_SERVER['HTTP_HOST'];
+        if (empty(Api::$apiSiteDomain)) {
+            Api::$apiSiteDomain = $_SERVER['HTTP_HOST'];
+        }
 
-        $this::$apiBase = 'https://' . $this::$apiDomain . '/api/' . Api::VERSION;
+        Api::$apiSiteBase = 'https://' . Api::$apiSiteDomain . '/api/' . Api::VERSION;
     }
 
     protected static function request($type = 'get', $route, $clauses = [], $data = [])
     {
+        Api::setVariables();
+
         $params = [
             'fd' => $_SERVER['HTTP_HOST'],
             'clauses' => $clauses,
             'data' => $data,
         ];
 
-        $curlUrl = strpos($route, Api::$apiBase) !== false ? $route : Api::$apiBase . '/' . trim($route, '/');
+        $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/');
 
         $ch = curl_init();
 
@@ -55,13 +59,6 @@ class Api
         }
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
-
-
-        $headers = [];
-        $headers[] = "Content-Type: application/json";
-        $headers[] = "Authorization: Bearer " . Api::$apiKey;
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $result = curl_exec($ch);
 
