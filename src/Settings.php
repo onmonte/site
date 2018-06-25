@@ -5,27 +5,17 @@ namespace Monte;
 class Settings
 {
 
-    public static function createRow()
+    public static function set()
     {
 
     }
 
-    public static function retrieveRow()
+    public static function get()
     {
 
     }
 
-    public static function updateRow()
-    {
-
-    }
-
-    public static function deleteRow()
-    {
-
-    }
-
-    public static function listRows()
+    public static function delete()
     {
 
     }
