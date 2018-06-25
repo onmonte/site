@@ -10,9 +10,9 @@ class Api
 
     public static $apiSiteBase;
 
-    const VERSION = '1.0';
+    const VERSION  = '1.0';
 
-    public static function setVariables()
+    protected static function setVariables()
     {
         if (empty(Api::$apiSiteDomain)) {
             Api::$apiSiteDomain = $_SERVER['HTTP_HOST'];
@@ -27,7 +27,7 @@ class Api
 
         $uniqueKey = base64_encode($type . urlencode($route) . serialize($clauses) . serialize($data));
 
-        $response = Cache::make($uniqueKey, 1, function () use ($type, $route, $clauses, $data) {
+        $response = Cache::make($uniqueKey, 5, function () use ($type, $route, $clauses, $data) {
             $params = [
                 'fd' => $_SERVER['HTTP_HOST'],
                 'clauses' => $clauses,
@@ -43,7 +43,9 @@ class Api
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
-            switch (strtolower(trim($type))) {
+            $type = strtolower(trim($type));
+
+            switch ($type) {
                 case 'get':
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
                     break;
@@ -63,6 +65,12 @@ class Api
 
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
 
+            $headers = [];
+            $headers[] = "Content-Type: application/json";
+            $headers[] = "Authorization: Bearer " . Api::$apiDeveloperKey;
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
             $result = curl_exec($ch);
 
             if (curl_errno($ch)) {
@@ -72,6 +80,10 @@ class Api
             curl_close($ch);
 
             $decodedResult = json_decode($result, true);
+
+            if ($type != 'get') {
+                Cache::destroy();
+            }
 
             return $decodedResult;
         });

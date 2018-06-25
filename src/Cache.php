@@ -122,7 +122,7 @@ class Cache
      *
      * cache::destroy('user/*');
      * */
-    static function destroy($name)
+    static function destroy($name = '*')
     {
         if (strpos($name, '*') == -1) {
             @unlink(Cache::$cacheFolder . '/' . $name);
