@@ -2,6 +2,8 @@
 
 namespace Monte;
 
+use Monte\Resources\Api;
+
 class Collection extends Api
 {
 

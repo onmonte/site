@@ -2,22 +2,24 @@
 
 namespace Monte;
 
-class Settings
+use Monte\Resources\Api;
+
+class Settings extends Api
 {
 
-    public static function set()
+    public static function set($key, $value)
     {
-
+        return self::request('post', '/settings/' . $key, $value);
     }
 
-    public static function get()
+    public static function retrieve($key)
     {
-
+        return self::request('get', '/settings/' . $key);
     }
 
-    public static function delete()
+    public static function delete($key)
     {
-
+        return self::request('delete', '/settings/' . $key);
     }
 
 
