@@ -27,67 +27,67 @@ class Api
 
         $uniqueKey = base64_encode($type . urlencode($route) . sha1(serialize($clauses)) . sha1(serialize($data)));
 
-        $response = Cache::make($uniqueKey, 5, function () use ($type, $route, $clauses, $data) {
-            $params = [
-                'fd' => $_SERVER['HTTP_HOST'],
-                'clauses' => $clauses,
-                'data' => $data,
-            ];
+        $cached = Cache::get($uniqueKey);
 
-            $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/');
+        if (!empty($cached)) {
+            return $cached;
+        }
 
-            $ch = curl_init();
+        $params = [
+            'fd' => $_SERVER['HTTP_HOST'],
+            'clauses' => $clauses,
+            'data' => $data,
+        ];
 
-            curl_setopt($ch, CURLOPT_URL, $curlUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/');
 
-            $type = strtolower(trim($type));
+        $ch = curl_init();
 
-            switch ($type) {
-                case 'get':
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-                    break;
+        curl_setopt($ch, CURLOPT_URL, $curlUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
-                case 'post':
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    break;
+        $type = strtolower(trim($type));
 
-                case 'put':
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-                    break;
+        switch ($type) {
+            case 'get':
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+                break;
 
-                case 'delete':
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-                    break;
-            }
+            case 'post':
+                curl_setopt($ch, CURLOPT_POST, 1);
+                break;
 
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+            case 'put':
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+                break;
 
-            $headers = [];
-            $headers[] = "Content-Type: application/json";
-            $headers[] = "Authorization: Bearer " . Api::$apiDeveloperKey;
+            case 'delete':
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+                break;
+        }
 
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
 
-            $result = curl_exec($ch);
+        $headers = [];
+        $headers[] = "Content-Type: application/json";
+        $headers[] = "Authorization: Bearer " . Api::$apiDeveloperKey;
 
-            if (curl_errno($ch)) {
-                return curl_error($ch);
-            }
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-            curl_close($ch);
+        $result = curl_exec($ch);
 
-            $decodedResult = json_decode($result, true);
+        if (curl_errno($ch)) {
+            return curl_error($ch);
+        }
 
-            if ($type != 'get') {
-                Cache::destroy();
-            }
+        curl_close($ch);
 
-            return $decodedResult;
-        });
+        $decodedResult = json_decode($result, true);
 
-        return $response;
+        Cache::store($uniqueKey, $decodedResult, 300);
+
+        return $decodedResult;
     }
 }
