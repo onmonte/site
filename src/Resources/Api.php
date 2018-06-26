@@ -25,7 +25,7 @@ class Api
     {
         Api::setVariables();
 
-        $uniqueKey = base64_encode($type . urlencode($route) . serialize($clauses) . serialize($data));
+        $uniqueKey = base64_encode($type . urlencode($route) . sha1(serialize($clauses)) . sha1(serialize($data)));
 
         $response = Cache::make($uniqueKey, 5, function () use ($type, $route, $clauses, $data) {
             $params = [
