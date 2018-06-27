@@ -6,16 +6,16 @@ class Cache
 {
     public static function get($key)
     {
-        return apc_fetch($key);
+        return $_COOKIE($key);
     }
 
     public static function store($key, $data, $ttl)
     {
-        return apc_store($key, $data, $ttl);
+        return setcookie($key, $data, time() + $ttl);
     }
 
     public static function delete($key)
     {
-        return apc_delete($key);
+        return \setcookie($key, null, 0);
     }
 }
