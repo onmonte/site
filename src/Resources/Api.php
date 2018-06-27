@@ -14,6 +14,10 @@ class Api
 
     protected static function setVariables()
     {
+        if (empty(Api::$apiSiteDomain)) {
+            Api::$apiSiteDomain = $_SERVER['HTTP_HOST'];
+        }
+
         Api::$apiSiteBase = 'https://onmonte.com/api/' . Api::VERSION;
     }
 
@@ -22,8 +26,9 @@ class Api
         Api::setVariables();
 
         $params = [
-            'fd' => $_SERVER['HTTP_HOST'],
-            'clauses' => $clauses,
+            'fd' => Api::$apiSiteDomain,
+            'dk' => Api::$apiSiteDomain,
+            'clauses' => Api::$apiDeveloperKey,
             'data' => $data,
         ];
 
