@@ -30,6 +30,16 @@ class Api
     {
         Api::setVariables();
 
+        $uniqueKey = base64_encode($type . $_SERVER['HTTP_HOST'] . urlencode($route) . sha1(serialize($clauses)) . sha1(serialize($data)));
+
+        $c = new Cache();
+
+        $cached = $c->retrieve($uniqueKey);
+
+        if (!empty($cached)) {
+            return $cached;
+        }
+
         if (!empty($clauses) && !empty($data)) {
             $params = [
                 'clauses' => $clauses,
@@ -85,6 +95,8 @@ class Api
         curl_close($ch);
 
         $decodedResult = json_decode($result, true);
+
+        $c->store($uniqueKey, $decodedResult, 3600);
 
         return $decodedResult;
     }
