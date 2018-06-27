@@ -23,11 +23,11 @@ class Api
 
         $uniqueKey = base64_encode($type . $_SERVER['HTTP_HOST'] . urlencode($route) . sha1(serialize($clauses)) . sha1(serialize($data)));
 
-        $cached = Cache::get($uniqueKey);
+        /*$cached = Cache::get($uniqueKey);
 
         if (!empty($cached)) {
             return $cached;
-        }
+        }*/
 
         $params = [
             'fd' => $_SERVER['HTTP_HOST'],
@@ -82,7 +82,7 @@ class Api
 
         $decodedResult = json_decode($result, true);
 
-        Cache::store($uniqueKey, $decodedResult, 300);
+        /*Cache::store($uniqueKey, $decodedResult, 300);*/
 
         return $decodedResult;
     }
