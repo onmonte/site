@@ -27,8 +27,8 @@ class Api
 
         $params = [
             'fd' => Api::$apiSiteDomain,
-            'dk' => Api::$apiSiteDomain,
-            'clauses' => Api::$apiDeveloperKey,
+            'dk' => Api::$apiDeveloperKey,
+            'clauses' => $clauses,
             'data' => $data,
         ];
 
