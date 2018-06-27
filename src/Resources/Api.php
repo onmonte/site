@@ -14,11 +14,7 @@ class Api
 
     protected static function setVariables()
     {
-        if (empty(Api::$apiSiteDomain)) {
-            Api::$apiSiteDomain = $_SERVER['HTTP_HOST'];
-        }
-
-        Api::$apiSiteBase = 'https://' . Api::$apiSiteDomain . '/api/' . Api::VERSION;
+        Api::$apiSiteBase = 'https://onmonte.com/api/' . Api::VERSION;
     }
 
     protected static function request($type = 'get', $route, $clauses = [], $data = [])
