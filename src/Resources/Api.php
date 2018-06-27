@@ -30,14 +30,14 @@ class Api
     {
         Api::setVariables();
 
-        $uniqueKey = base64_encode($type . $_SERVER['HTTP_HOST'] . urlencode($route) . sha1(serialize($clauses)) . sha1(serialize($data)));
+        $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/') . '?fd=' . Api::$apiSiteDomain . '&dk=' . Api::$apiDeveloperKey;
+
+        $uniqueKey = base64_encode($type . urlencode($curlUrl) . sha1(serialize($clauses)) . sha1(serialize($data)));
 
         $c = new Cache();
 
-        $cached = $c->retrieve($uniqueKey);
-
-        if (!empty($cached)) {
-            return $cached;
+        if ($c->isCached($uniqueKey)) {
+            return $c->retrieve($uniqueKey);
         }
 
         if (!empty($clauses) && !empty($data)) {
@@ -46,8 +46,6 @@ class Api
                 'data' => $data,
             ];
         }
-
-        $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/') . '?fd=' . Api::$apiSiteDomain . '&dk=' . Api::$apiDeveloperKey;
 
         $ch = curl_init();
 
