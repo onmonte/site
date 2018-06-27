@@ -12,7 +12,7 @@ class Api
 
     const VERSION  = '1.0';
 
-    public static function setDomain($domain)
+    public static function setSiteDomain($domain)
     {
         Api::$apiSiteDomain = $domain;
     }
