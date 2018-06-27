@@ -30,14 +30,14 @@ class Api
     {
         Api::setVariables();
 
-        $params = [
-            'fd' => Api::$apiSiteDomain,
-            'dk' => Api::$apiDeveloperKey,
-            'clauses' => $clauses,
-            'data' => $data,
-        ];
+        if (!empty($clauses) && !empty($data)) {
+            $params = [
+                'clauses' => $clauses,
+                'data' => $data,
+            ];
+        }
 
-        $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/');
+        $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/') . '?fd=' . Api::$apiSiteDomain . '&dk=' . Api::$apiDeveloperKey;
 
         $ch = curl_init();
 
@@ -66,7 +66,9 @@ class Api
                 break;
         }
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+        if (!empty($params)) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+        }
 
         $headers = [];
         $headers[] = "Content-Type: application/json";
