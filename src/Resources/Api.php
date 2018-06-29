@@ -62,14 +62,20 @@ class Api
                 break;
 
             case 'post':
+                $c->eraseAll();
+
                 curl_setopt($ch, CURLOPT_POST, 1);
                 break;
 
             case 'put':
+                $c->eraseAll();
+
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
                 break;
 
             case 'delete':
+                $c->eraseAll();
+
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
                 break;
         }
