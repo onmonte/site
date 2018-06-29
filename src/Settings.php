@@ -9,7 +9,9 @@ class Settings extends Api
 
     public static function set($key, $value)
     {
-        return self::request('post', '/settings/' . $key, $value);
+        return self::request('post', '/settings/' . $key, [], [
+            'value' => $value
+        ]);
     }
 
     public static function retrieve($key = 'all')
