@@ -31,7 +31,7 @@ class Api
             } elseif (Api::$apiSiteDomain == 'onmonte.com' && !empty($_GET['fd'])) {
                 Api::$apiSiteDomain = $_GET['fd'];
             } elseif (Api::$apiSiteDomain == 'onmonte.com') {
-                $segments = explode('/', trim($_SERVER['PATH_INFO'], '/'));
+                $segments = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
 
                 if (!empty($segments) && $segments[0] == 'admin' && !empty($segments[1])) {
                     Api::$apiSiteDomain = $segments[1];
