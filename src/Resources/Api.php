@@ -40,7 +40,7 @@ class Api
             return $c->retrieve($uniqueKey);
         }
 
-        if (!empty($clauses) && !empty($data)) {
+        if (!empty($clauses) || !empty($data)) {
             $params = [
                 'clauses' => $clauses,
                 'data' => $data,
