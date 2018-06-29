@@ -52,7 +52,7 @@ class Api
 
         $c = new Cache();
 
-        if ($c->isCached($uniqueKey)) {
+        if ($c->isCached($uniqueKey) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             return $c->retrieve($uniqueKey);
         }
 
@@ -116,7 +116,9 @@ class Api
 
         $decodedResult = json_decode($result, true);
 
-        $c->store($uniqueKey, $decodedResult, 3600);
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $c->store($uniqueKey, $decodedResult, 3600);
+        }
 
         return $decodedResult;
     }
