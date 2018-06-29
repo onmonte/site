@@ -21,6 +21,16 @@ class Api
     {
         if (empty(Api::$apiSiteDomain)) {
             Api::$apiSiteDomain = $_SERVER['HTTP_HOST'];
+
+            if (Api::$apiSiteDomain == '127.0.0.1:8989') {
+
+                /*$c = new Cache();
+                $c->eraseAll();*/
+
+                Api::$apiSiteDomain = 'tiye.onmonte.com';
+            } elseif (Api::$apiSiteDomain == 'onmonte.com' && !empty($_GET['fd'])) {
+                Api::$apiSiteDomain = $_GET['fd'];
+            }
         }
 
         Api::$apiSiteBase = 'https://onmonte.com/api/' . Api::VERSION;
