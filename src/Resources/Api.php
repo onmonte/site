@@ -30,6 +30,12 @@ class Api
                 Api::$apiSiteDomain = 'tiye.onmonte.com';
             } elseif (Api::$apiSiteDomain == 'onmonte.com' && !empty($_GET['fd'])) {
                 Api::$apiSiteDomain = $_GET['fd'];
+            } elseif (Api::$apiSiteDomain == 'onmonte.com') {
+                $segments = explode('/', trim($_SERVER['PATH_INFO'], '/'));
+
+                if (!empty($segments) && $segments[0] == 'admin' && !empty($segments[1])) {
+                    Api::$apiSiteDomain = $segments[1];
+                }
             }
         }
 
