@@ -9,7 +9,7 @@ class Collection extends Api
 
     public static function createRow($collection, $data = [])
     {
-        return self::request('post', '/collection/' . $collection, $data);
+        return self::request('post', '/collection/' . $collection, [], $data);
     }
 
     public static function retrieveRow($collection, $clausesOrId = [])
