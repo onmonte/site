@@ -16,7 +16,7 @@ class Settings extends Api
     {
         $data = self::request('get', '/settings/' . $key);
 
-        return $data['value'];
+        return !empty($data) && !empty($data['value']) ? $data['value'] : false;
     }
 
     public static function delete($key)
