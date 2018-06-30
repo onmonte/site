@@ -54,9 +54,9 @@ class Api
 
         $c = new Cache();
 
-        if ($c->isCached($uniqueKey) && $_SERVER['REQUEST_METHOD'] === 'GET') {
+        /*if ($c->isCached($uniqueKey) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             return $c->retrieve($uniqueKey);
-        }
+        }*/
 
         if (!empty($clauses) || !empty($data)) {
             $params = [
@@ -118,13 +118,9 @@ class Api
 
         $decodedResult = json_decode($result, true);
 
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        /*if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $c->store($uniqueKey, $decodedResult, 3600);
-        }
-
-        if (!empty($decodedResult) && !empty($decodedResult['updateCache'])) {
-            $c->eraseAll();
-        }
+        }*/
 
         return $decodedResult;
     }
