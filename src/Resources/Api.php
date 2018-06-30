@@ -2,8 +2,6 @@
 
 namespace Monte\Resources;
 
-use Monte\Settings;
-
 class Api
 {
     public static $apiDeveloperKey;
@@ -52,11 +50,15 @@ class Api
 
         $uniqueKey = base64_encode($type . urlencode($curlUrl) . sha1(serialize($clauses)) . sha1(serialize($data)));
 
-        $c = new Cache();
+        $c = new Cache([
+            'name' => 'default',
+            'path' => strstr(dirname(__FILE__), '/vendor/', true) . '/cache/',
+            'extension' => '.cache'
+        ]);
 
-        /*if ($c->isCached($uniqueKey) && $_SERVER['REQUEST_METHOD'] === 'GET') {
+        if ($c->isCached($uniqueKey) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             return $c->retrieve($uniqueKey);
-        }*/
+        }
 
         if (!empty($clauses) || !empty($data)) {
             $params = [
@@ -118,9 +120,9 @@ class Api
 
         $decodedResult = json_decode($result, true);
 
-        /*if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $c->store($uniqueKey, $decodedResult, 3600);
-        }*/
+        }
 
         return $decodedResult;
     }
