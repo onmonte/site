@@ -2,6 +2,8 @@
 
 namespace Monte\Resources;
 
+use Monte\Settings;
+
 class Api
 {
     public static $apiDeveloperKey;
@@ -118,6 +120,10 @@ class Api
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $c->store($uniqueKey, $decodedResult, 3600);
+        }
+
+        if (!empty($decodedResult) && !empty($decodedResult['updateCache'])) {
+            $c->eraseAll();
         }
 
         return $decodedResult;
