@@ -64,13 +64,15 @@ class Api
             $cachePath = $basePath . '/cache/';
         }
 
+        $type = strtolower(trim($type));
+
         $c = new Cache([
             'name' => 'default',
             'path' => $cachePath,
             'extension' => '.cache'
         ]);
 
-        if ($c->isCached($uniqueKey) && $_SERVER['REQUEST_METHOD'] === 'GET') {
+        if ($c->isCached($uniqueKey) && $type == 'get') {
             return $c->retrieve($uniqueKey);
         }
 
@@ -87,8 +89,6 @@ class Api
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-
-        $type = strtolower(trim($type));
 
         switch ($type) {
             case 'get':
@@ -134,7 +134,7 @@ class Api
 
         $decodedResult = json_decode($result, true);
 
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if ($type == 'get') {
             $c->store($uniqueKey, $decodedResult, 3600);
         }
 
