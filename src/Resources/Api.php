@@ -52,9 +52,17 @@ class Api
 
         $basePath = strstr(dirname(__FILE__), '/vendor/', true);
 
-        $configFile = $basePath . '/config.json';
+        $siteConfigFile = $basePath . '/config.json';
 
-        if (file_exists($configFile)) {
+        $fromMainConfigFile = $basePath . '/../sites/' . Api::$apiSiteDomain . '/config.json';
+
+        if (file_exists($siteConfigFile)) {
+            $configFile = $siteConfigFile;
+        } else if (file_exists($fromMainConfigFile)) {
+            $configFile = $fromMainConfigFile;
+        }
+
+        if (!empty($configFile)) {
             $config = file_get_contents($configFile);
 
             $configSettings = json_decode($config, true);
