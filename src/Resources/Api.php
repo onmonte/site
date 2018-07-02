@@ -10,7 +10,7 @@ class Api
 
     public static $apiSiteBase;
 
-    const VERSION  = '1.0';
+    const VERSION = '1.0';
 
     public static function setSiteDomain($domain)
     {
@@ -50,9 +50,23 @@ class Api
 
         $uniqueKey = base64_encode($type . urlencode($curlUrl) . sha1(serialize($clauses)) . sha1(serialize($data)));
 
+        $basePath = strstr(dirname(__FILE__), '/vendor/', true);
+
+        $configFile = $basePath . '/config.json';
+
+        if (file_exists($configFile)) {
+            $config = file_get_contents($configFile);
+
+            $configSettings = json_decode($config, true);
+
+            $cachePath = $basePath . '/' . trim($configSettings['cache_path'], '/') . '/';
+        } else {
+            $cachePath = $basePath . '/cache/';
+        }
+
         $c = new Cache([
             'name' => 'default',
-            'path' => strstr(dirname(__FILE__), '/vendor/', true) . '/cache/',
+            'path' => $cachePath,
             'extension' => '.cache'
         ]);
 
