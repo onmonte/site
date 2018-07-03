@@ -29,7 +29,7 @@ class Collection extends Api
 
     public static function listRows($category, $clauses = [])
     {
-        return self::request('/collection' . $category . '//list', $clauses);
+        return self::request('/collection' . $category . '/list', $clauses);
     }
 
 
