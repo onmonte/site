@@ -48,7 +48,7 @@ class Api
 
         $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/') . '?fd=' . Api::$apiSiteDomain . '&dk=' . Api::$apiDeveloperKey;
 
-        $uniqueKey = base64_encode(urlencode($curlUrl) . sha1(serialize($clauses)) . sha1(serialize($data)));
+        $uniqueKey = base64_encode(urlencode($curlUrl) . serialize($clauses) . serialize($data));
 
         $basePath = strstr(dirname(__FILE__), '/vendor/', true);
 
