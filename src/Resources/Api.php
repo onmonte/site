@@ -42,13 +42,13 @@ class Api
         Api::$apiSiteBase = 'https://onmonte.com/api/' . Api::VERSION;
     }
 
-    protected static function request($type = 'get', $route, $clauses = [], $data = [])
+    protected static function request($route, $clauses = [], $data = [])
     {
         Api::setVariables();
 
         $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/') . '?fd=' . Api::$apiSiteDomain . '&dk=' . Api::$apiDeveloperKey;
 
-        $uniqueKey = base64_encode($type . urlencode($curlUrl) . sha1(serialize($clauses)) . sha1(serialize($data)));
+        $uniqueKey = base64_encode(urlencode($curlUrl) . sha1(serialize($clauses)) . sha1(serialize($data)));
 
         $basePath = strstr(dirname(__FILE__), '/vendor/', true);
 
@@ -72,23 +72,19 @@ class Api
             $cachePath = $basePath . '/cache/';
         }
 
-        $type = strtolower(trim($type));
-
         $c = new Cache([
             'name' => 'default',
             'path' => $cachePath,
             'extension' => '.cache'
         ]);
 
-        if ($c->isCached($uniqueKey) && $type == 'get') {
-            return $c->retrieve($uniqueKey);
-        }
+        $params = [
+            'clauses' => $clauses,
+            'data' => $data,
+        ];
 
-        if (!empty($clauses) || !empty($data)) {
-            $params = [
-                'clauses' => $clauses,
-                'data' => $data,
-            ];
+        if ($c->isCached($uniqueKey) && empty($data)) {
+            return $c->retrieve($uniqueKey);
         }
 
         $ch = curl_init();
@@ -97,46 +93,19 @@ class Api
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-
-        switch ($type) {
-            case 'get':
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-                break;
-
-            case 'post':
-                $c->eraseAll();
-
-                curl_setopt($ch, CURLOPT_POST, 1);
-                break;
-
-            case 'put':
-                $c->eraseAll();
-
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-                break;
-
-            case 'delete':
-                $c->eraseAll();
-
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-                break;
-        }
-
-        if (!empty($params)) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-        }
-
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)');
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 
-        /*$headers = [];
+        $headers = [];
         $headers[] = "Content-Type: application/json";
         $headers[] = "Authorization: Bearer " . Api::$apiDeveloperKey;
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);*/
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $result = curl_exec($ch);
 
@@ -148,7 +117,7 @@ class Api
 
         $decodedResult = json_decode($result, true);
 
-        if ($type == 'get') {
+        if (empty($data)) {
             $c->store($uniqueKey, $decodedResult, 3600);
         }
 
