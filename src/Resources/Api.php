@@ -96,14 +96,14 @@ class Api
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        /*curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);*/
+        /*curl_setopt($ch, CURLOPT_VERBOSE, true);*/
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)');
-        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        /*curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);*/
 
-        $headers = [];
+        /*$headers = [];
         $headers[] = "Content-Type: application/json";
-        $headers[] = "Authorization: Bearer " . Api::$apiDeveloperKey;
+        $headers[] = "Authorization: Bearer " . Api::$apiDeveloperKey;*/
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
