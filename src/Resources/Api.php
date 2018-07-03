@@ -105,7 +105,7 @@ class Api
         $headers[] = "Content-Type: application/json";
         $headers[] = "Authorization: Bearer " . Api::$apiDeveloperKey;*/
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        /*curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);*/
 
         $result = curl_exec($ch);
 
