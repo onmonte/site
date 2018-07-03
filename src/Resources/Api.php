@@ -123,7 +123,7 @@ class Api
         }
 
         if (!empty($params)) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
         }
 
         $headers = [];
