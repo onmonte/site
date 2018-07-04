@@ -54,7 +54,9 @@ class Api
 
         $siteConfigFile = $basePath . '/config.json';
 
-        $fromMainConfigFile = $basePath . '/../sites/' . Api::$apiSiteDomain . '/config.json';
+        $sitePath = $basePath . '/../sites/' . Api::$apiSiteDomain;
+
+        $fromMainConfigFile = $sitePath . '/config.json';
 
         if (file_exists($siteConfigFile)) {
             $configFile = $siteConfigFile;
@@ -67,7 +69,7 @@ class Api
 
             $configSettings = json_decode($config, true);
 
-            $cachePath = $basePath . '/' . trim($configSettings['cache_path'], '/') . '/';
+            $cachePath = $sitePath . '/' . trim($configSettings['cache_path'], '/') . '/';
         } else {
             $cachePath = $basePath . '/cache/';
         }
