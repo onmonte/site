@@ -119,7 +119,9 @@ class Api
 
         $decodedResult = json_decode($result, true);
 
-        if (empty($data)) {
+        if (!empty($data)) {
+            $c->eraseAll();
+        } else {
             $c->store($uniqueKey, $decodedResult, 3600);
         }
 
