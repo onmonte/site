@@ -9,18 +9,18 @@ class Config extends Api
 
     public static function settings()
     {
-        return self::request( '/config/settings');
+        return self::request( '/config/settings', [], [], true, false);
     }
 
 
     public static function collections()
     {
-        return self::request( '/config/collections');
+        return self::request( '/config/collections', [], [], true, false);
     }
 
     public static function options()
     {
-        return self::request( '/config/options');
+        return self::request( '/config/options', [], [], true, false);
     }
 
 

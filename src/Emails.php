@@ -14,7 +14,7 @@ class Emails extends Api
             'html' => $html,
             'email' => $email,
             'name' => $name,
-        ]);
+        ], false, false);
     }
 
 }

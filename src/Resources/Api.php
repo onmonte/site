@@ -42,18 +42,52 @@ class Api
         Api::$apiSiteBase = 'https://onmonte.com/api/' . Api::VERSION;
     }
 
-    protected static function request($route, $clauses = [], $data = [])
+    protected static function request($route, $clauses = [], $data = [], $cache = false, $erase = false)
     {
         Api::setVariables();
 
         $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/') . '?fd=' . Api::$apiSiteDomain . '&dk=' . Api::$apiDeveloperKey;
 
-        //$uniqueKey = base64_encode(urlencode($curlUrl) . serialize($clauses) . serialize($data));
+        $uniqueKey = base64_encode(urlencode($curlUrl) . serialize($clauses) . serialize($data));
+
+        $basePath = strstr(dirname(__FILE__), '/vendor/', true);
+
+        $siteConfigFile = $basePath . '/config.json';
+
+        $sitePath = $basePath . '/../sites/' . Api::$apiSiteDomain;
+
+        $fromMainConfigFile = $sitePath . '/config.json';
+
+        if (file_exists($siteConfigFile)) {
+            $configFile = $siteConfigFile;
+        } else if (file_exists($fromMainConfigFile)) {
+            $configFile = $fromMainConfigFile;
+        }
+
+        if (!empty($configFile)) {
+            $config = file_get_contents($configFile);
+
+            $configSettings = json_decode($config, true);
+
+            $cachePath = $sitePath . '/' . trim($configSettings['cache_path'], '/') . '/';
+        } else {
+            $cachePath = $basePath . '/cache/';
+        }
+
+        $c = new Cache([
+            'name' => 'default',
+            'path' => $cachePath,
+            'extension' => '.cache'
+        ]);
 
         $params = [
             'clauses' => $clauses,
             'data' => $data,
         ];
+
+        if ($c->isCached($uniqueKey) && $cache) {
+            return $c->retrieve($uniqueKey);
+        }
 
         $ch = curl_init();
 
@@ -84,6 +118,14 @@ class Api
         curl_close($ch);
 
         $decodedResult = json_decode($result, true);
+
+        if ($cache) {
+            $c->store($uniqueKey, $decodedResult, 3600);
+        }
+
+        if ($erase) {
+            $c->eraseAll();
+        }
 
         return $decodedResult;
     }
