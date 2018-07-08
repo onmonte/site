@@ -85,9 +85,9 @@ class Api
             'data' => $data,
         ];
 
-        if ($c->isCached($uniqueKey) && empty($data)) {
+        /*if ($c->isCached($uniqueKey) && empty($data)) {
             return $c->retrieve($uniqueKey);
-        }
+        }*/
 
         $ch = curl_init();
 
@@ -119,11 +119,11 @@ class Api
 
         $decodedResult = json_decode($result, true);
 
-        if (!empty($data)) {
+        /*if (!empty($data)) {
             $c->eraseAll();
         } else {
             $c->store($uniqueKey, $decodedResult, 3600);
-        }
+        }*/
 
         return $decodedResult;
     }
