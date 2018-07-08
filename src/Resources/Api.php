@@ -127,12 +127,12 @@ class Api
 
         $decodedResult = json_decode($result, true);
 
-        if ($cache) {
-            $c->store($uniqueKey, $decodedResult, 3600);
-        }
-
         if ($erase) {
             $c->eraseAll();
+        }
+
+        if ($cache) {
+            $c->store($uniqueKey, $decodedResult, 3600);
         }
 
         return $decodedResult;
