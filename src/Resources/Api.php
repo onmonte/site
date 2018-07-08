@@ -73,9 +73,13 @@ class Api
 
             $configSettings = json_decode($config, true);
 
+            if (empty($configSettings['cache_path'])) {
+                $configSettings['cache_path'] = '/cache';
+            }
+
             $cachePath = $cacheBasePath . '/' . trim($configSettings['cache_path'], '/') . '/';
         } else {
-            $cachePath = $basePath . '/cache/';
+            $cachePath = $cacheBasePath . '/cache/';
         }
 
         $c = new Cache([
