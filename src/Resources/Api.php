@@ -94,7 +94,13 @@ class Api
         ];
 
         if ($c->isCached($uniqueKey) && $cache) {
-            return $c->retrieve($uniqueKey);
+            $data = $c->retrieve($uniqueKey);
+
+            if ($erase) {
+                $c->eraseAll();
+            }
+
+            return $data;
         }
 
         $ch = curl_init();
