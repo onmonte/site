@@ -82,10 +82,6 @@ class Api
             'extension' => '.cache'
         ]);
 
-        if ($erase) {
-            $c->eraseAll();
-        }
-
         $params = [
             'clauses' => $clauses,
             'data' => $data,
@@ -93,6 +89,10 @@ class Api
 
         if ($c->isCached($uniqueKey) && $cache) {
             $data = $c->retrieve($uniqueKey);
+
+            if ($erase) {
+                $c->eraseAll();
+            }
 
             return $data;
         }
@@ -129,6 +129,10 @@ class Api
 
         if ($cache) {
             $c->store($uniqueKey, $decodedResult, 3600);
+        }
+
+        if ($erase) {
+            $c->eraseAll();
         }
 
         return $decodedResult;
