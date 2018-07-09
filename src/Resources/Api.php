@@ -46,11 +46,11 @@ class Api
 
         $basePath = strstr(dirname(__FILE__), '/vendor/', true);
 
-        $siteConfigFile = $basePath . '/config.json';
+        $siteConfigFile = $basePath . '/monte-settings.json';
 
         $sitePath = $basePath . '/../sites/' . Api::$apiSiteDomain;
 
-        $fromMainConfigFile = $sitePath . '/config.json';
+        $fromMainConfigFile = $sitePath . '/monte-settings.json';
 
         $cacheBasePath = $basePath;
 
