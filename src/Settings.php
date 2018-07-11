@@ -12,12 +12,12 @@ class Settings extends Api
         return self::request('/settings/' . $key . '/set', [], [
             'key' => $key,
             'value' => $value
-        ], false, true);
+        ]);
     }
 
     public static function retrieve($key = 'all')
     {
-        $data = self::request('/settings/' . $key . '/retrieve', [], [], true, false);
+        $data = self::request('/settings/' . $key . '/retrieve', [], []);
 
         if (!empty($data['value'])) {
             return $data['value'];
@@ -28,7 +28,7 @@ class Settings extends Api
 
     public static function delete($key)
     {
-        return self::request('/settings/' . $key . '/delete' . $key, [], [], false, true);
+        return self::request('/settings/' . $key . '/delete' . $key, [], []);
     }
 
 

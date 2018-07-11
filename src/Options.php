@@ -9,12 +9,12 @@ class Options extends Api
 
     public static function retrieve($category)
     {
-        return self::request('/options/' . $category . '/retrieve', [], [], true, false);
+        return self::request('/options/' . $category . '/retrieve', [], []);
     }
 
     public static function update($category, $data)
     {
-        return self::request('/options/' . $category . '/update', [], $data, false, true);
+        return self::request('/options/' . $category . '/update', [], $data);
     }
 
 

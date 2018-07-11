@@ -13,7 +13,7 @@ class Payments extends Api
             'cardholderName' => $cardholderName,
             'cardholderEmail' => $cardholderEmail,
             'cardToken' => $cardToken,
-        ], false, true);
+        ]);
     }
 
     public static function createCardToken($cardNumber, $expMonth, $expYear, $cvc)
@@ -23,7 +23,7 @@ class Payments extends Api
             'expMonth' => $expMonth,
             'expYear' => $expYear,
             'cvc' => $cvc
-        ], false, true);
+        ]);
     }
 
     public static function createCardCharge($amount, $currency, $customerId, $description)
@@ -33,7 +33,7 @@ class Payments extends Api
             'currency' => $currency,
             'customerId' => $customerId,
             'description' => $description,
-        ], false, true);
+        ]);
     }
 
     public static function updateCardDefault($customerId, $cardToken)
@@ -41,7 +41,7 @@ class Payments extends Api
         return self::request('/payments/update-card-default', [], [
             'customerId' => $customerId,
             'cardToken' => $cardToken
-        ], false, true);
+        ]);
     }
 
 }
