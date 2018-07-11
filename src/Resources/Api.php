@@ -42,6 +42,9 @@ class Api
 
         $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/') . '?fd=' . Api::$apiSiteDomain . '&dk=' . Api::$apiDeveloperKey;
 
+        $basePath = strstr(dirname(__FILE__), '/vendor/', true);
+
+
         $params = [
             'clauses' => $clauses,
             'data' => $data,
@@ -63,6 +66,14 @@ class Api
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $result = curl_exec($ch);
+
+        file_put_contents($basePath . '/../monte-library.log', json_encode([
+                'date' => date('Y-m-d H:i:s'),
+                'server_domain' => $_SERVER['HTTP_HOST'],
+                'domain' => Api::$apiSiteDomain,
+                'url' => $curlUrl,
+                'result' => $result
+            ]) . PHP_EOL, FILE_APPEND);
 
         if (curl_errno($ch)) {
             return curl_error($ch);
