@@ -4,7 +4,7 @@ namespace Monte\Resources;
 
 class Api
 {
-    public static $apiDeveloperKey;
+    public static $apiDeveloperKey = 'beta';
 
     public static $apiSiteDomain;
 
@@ -36,66 +36,16 @@ class Api
         Api::$apiSiteBase = 'https://onmonte.com/api/' . Api::VERSION;
     }
 
-    protected static function request($route, $clauses = [], $data = [], $cache = false, $erase = false)
+    protected static function request($route, $clauses = [], $data = [])
     {
         Api::setVariables();
 
         $curlUrl = strpos($route, Api::$apiSiteBase) !== false ? $route : Api::$apiSiteBase . '/' . trim($route, '/') . '?fd=' . Api::$apiSiteDomain . '&dk=' . Api::$apiDeveloperKey;
 
-        $uniqueKey = base64_encode(urlencode($curlUrl) . serialize($clauses) . serialize($data));
-
-        $basePath = strstr(dirname(__FILE__), '/vendor/', true);
-
-        $siteConfigFile = $basePath . '/monte-settings.json';
-
-        $sitePath = $basePath . '/../sites/' . Api::$apiSiteDomain;
-
-        $fromMainConfigFile = $sitePath . '/monte-settings.json';
-
-        $cacheBasePath = $basePath;
-
-        if (file_exists($siteConfigFile)) {
-            $configFile = $siteConfigFile;
-        } else if (file_exists($fromMainConfigFile)) {
-            $configFile = $fromMainConfigFile;
-
-            $cacheBasePath = $sitePath;
-        }
-
-        if (!empty($configFile)) {
-            $config = file_get_contents($configFile);
-
-            $configSettings = json_decode($config, true);
-
-            if (empty($configSettings['cache_path'])) {
-                $configSettings['cache_path'] = '/cache';
-            }
-
-            $cachePath = $cacheBasePath . '/' . trim($configSettings['cache_path'], '/') . '/';
-        } else {
-            $cachePath = $cacheBasePath . '/cache/';
-        }
-
-        $c = new Cache([
-            'name' => 'default',
-            'path' => $cachePath,
-            'extension' => '.cache'
-        ]);
-
         $params = [
             'clauses' => $clauses,
             'data' => $data,
         ];
-
-        if ($c->isCached($uniqueKey) && $cache) {
-            $data = $c->retrieve($uniqueKey);
-
-            if ($erase) {
-                $c->eraseAll();
-            }
-
-            return $data;
-        }
 
         $ch = curl_init();
 
@@ -106,16 +56,15 @@ class Api
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
 
-        /*curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);*/
-        /*curl_setopt($ch, CURLOPT_VERBOSE, true);*/
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)');
-        /*curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);*/
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 
-        /*$headers = [];
+        $headers = [];
         $headers[] = "Content-Type: application/json";
-        $headers[] = "Authorization: Bearer " . Api::$apiDeveloperKey;*/
 
-        /*curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);*/
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $result = curl_exec($ch);
 
@@ -126,14 +75,6 @@ class Api
         curl_close($ch);
 
         $decodedResult = json_decode($result, true);
-
-        if ($cache) {
-            $c->store($uniqueKey, $decodedResult, 3600);
-        }
-
-        if ($erase) {
-            $c->eraseAll();
-        }
 
         return $decodedResult;
     }
