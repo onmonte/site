@@ -9,6 +9,13 @@ class Options extends Api
 
     public static $name;
 
+    public static $title;
+
+    public static $description;
+
+    public static $fields;
+
+
     public static function get()
     {
         return self::request('/options/' . self::$name . '/retrieve', [], [], true, false);

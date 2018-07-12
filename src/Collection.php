@@ -9,6 +9,16 @@ class Collection extends Api
 
     public static $name;
 
+    public static $title;
+
+    public static $description;
+
+    public static $paginate;
+
+    public static $sortable;
+
+    public static $fields;
+
     public static function create($data = [])
     {
         return self::request('/collection/' . self::$name . '/create', [], $data, false, true);
