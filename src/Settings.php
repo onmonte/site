@@ -15,9 +15,9 @@ class Settings extends Api
         ], false, true);
     }
 
-    public static function retrieve($key = 'all')
+    public static function get($key = 'all')
     {
-        $data = self::request('/settings/' . $key . '/retrieve', [], [], true, false);
+        $data = self::request('/settings/' . $key . '/get', [], [], true, false);
 
         if (!empty($data['value'])) {
             return $data['value'];

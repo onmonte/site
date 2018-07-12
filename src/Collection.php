@@ -7,29 +7,31 @@ use Monte\Resources\Api;
 class Collection extends Api
 {
 
-    public static function createRow($category, $data = [])
+    public static $name;
+
+    public static function create($data = [])
     {
-        return self::request('/collection/' . $category . '/create', [], $data, false, true);
+        return self::request('/collection/' . self::$name . '/create', [], $data, false, true);
     }
 
-    public static function retrieveRow($category, $clausesOrId = [])
+    public static function find($clausesOrId = [])
     {
-        return self::request('/collection/' . $category . '/retrieve', $clausesOrId, [], true, false);
+        return self::request('/collection/' . self::$name . '/find', $clausesOrId, [], true, false);
     }
 
-    public static function updateRow($category, $clausesOrId = [], $data = [])
+    public static function update($clausesOrId = [], $data = [])
     {
-        return self::request('/collection/' . $category . '/update', $clausesOrId, $data, false, true);
+        return self::request('/collection/' . self::$name . '/update', $clausesOrId, $data, false, true);
     }
 
-    public static function deleteRow($category, $clausesOrId = [])
+    public static function delete($clausesOrId = [])
     {
-        return self::request('/collection/' . $category . '/delete', $clausesOrId, [], false, true);
+        return self::request('/collection/' . self::$name . '/delete', $clausesOrId, [], false, true);
     }
 
-    public static function listRows($category, $clauses = [])
+    public static function get($clauses = [])
     {
-        return self::request('/collection/' . $category . '/list', $clauses, [],true, false);
+        return self::request('/collection/' . self::$name . '/get', $clauses, [],true, false);
     }
 
 
