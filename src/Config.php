@@ -20,17 +20,17 @@ class Config extends Api
 
     public static function hourly()
     {
-        return self::request('/config/hourly');
+        return self::request('/config/hourly', [], [], false, true);
     }
 
     public static function daily()
     {
-        return self::request('/config/daily');
+        return self::request('/config/daily', [], [], false, true);
     }
 
     public static function monthly()
     {
-        return self::request('/config/monthly');
+        return self::request('/config/monthly', [], [], false, true);
     }
 
 
