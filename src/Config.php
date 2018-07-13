@@ -7,6 +7,11 @@ use Monte\Resources\Api;
 class Config extends Api
 {
 
+    public static function composerInstall()
+    {
+        return self::request('/config/composerInstall', [], [], false, true);
+    }
+
     public static function collections()
     {
         return self::request('/config/collections', [], [], true, false);
