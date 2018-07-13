@@ -97,6 +97,8 @@ class Api
             return $data;
         }
 
+        $start = microtime(true);
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $curlUrl);
@@ -134,6 +136,14 @@ class Api
         if ($erase) {
             $c->eraseAll();
         }
+
+        $time_elapsed_secs = microtime(true) - $start;
+
+        file_put_contents($basePath . '/../onmonte-site.log', json_encode([
+            'url' => $curlUrl,
+            'time' => $time_elapsed_secs,
+            'result' => $result
+        ]) . PHP_EOL);
 
         return $decodedResult;
     }
