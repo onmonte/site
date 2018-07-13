@@ -19,7 +19,7 @@ class Settings extends Api
     {
         $data = self::request('/settings/' . $key . '/get', [], [], true, false);
 
-        if (!empty($data['value'])) {
+        if ($key != 'all') {
             return $data['value'];
         }
 
