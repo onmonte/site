@@ -9,7 +9,7 @@ class Config extends Api
 
     public static function composerInstall()
     {
-        return self::request('/config/composerInstall', [], [], false, true);
+        return self::request('/config/composer-install', [], [], false, true);
     }
 
     public static function collections()
