@@ -122,6 +122,14 @@ class Api
         $result = curl_exec($ch);
 
         if (curl_errno($ch)) {
+            $time_elapsed_secs = microtime(true) - $start;
+
+            file_put_contents('/var/www/monte/onmonte-site.log', json_encode([
+                    'url' => $curlUrl,
+                    'time' => $time_elapsed_secs,
+                    'error' => curl_error($ch)
+                ]) . PHP_EOL);
+
             return curl_error($ch);
         }
 
