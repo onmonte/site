@@ -151,7 +151,7 @@ class Api
             'url' => $curlUrl,
             'time' => $time_elapsed_secs,
             'result' => $result
-        ]) . PHP_EOL);
+        ]) . PHP_EOL, FILE_APPEND);
 
         return $decodedResult;
     }
