@@ -7,23 +7,14 @@ use Monte\Resources\Api;
 class Options extends Api
 {
 
-    public static $name;
-
-    public static $title;
-
-    public static $description;
-
-    public static $fields;
-
-
-    public static function get()
+    public static function get($category)
     {
-        return self::request('/options/' . self::$name . '/retrieve', [], [], true, false);
+        return self::request('/options/' . $category . '/retrieve', [], [], true, false);
     }
 
-    public static function update($data)
+    public static function update($category, $data)
     {
-        return self::request('/options/' . self::$name . '/update', [], $data, false, true);
+        return self::request('/options/' . $category . '/update', [], $data, false, true);
     }
 
 
