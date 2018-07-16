@@ -147,11 +147,11 @@ class Api
 
         $time_elapsed_secs = microtime(true) - $start;
 
-        file_put_contents('/var/www/monte/onmonte-site.log', json_encode([
+        /*file_put_contents('/var/www/monte/onmonte-site.log', json_encode([
             'url' => $curlUrl,
             'time' => $time_elapsed_secs,
             'result' => $result
-        ]) . PHP_EOL, FILE_APPEND);
+        ]) . PHP_EOL, FILE_APPEND);*/
 
         return $decodedResult;
     }
