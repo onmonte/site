@@ -28,9 +28,12 @@ class Collection extends Api
         return self::request('/collection/' . $category . '/delete', $clausesOrId, [], false, true);
     }
 
-    public static function get($category, $clauses = [])
+    public static function get($category, $clauses = [], $paginate = 20, $page = 1)
     {
-        return self::request('/collection/' . $category . '/get', $clauses, [],true, false);
+        return self::request('/collection/' . $category . '/get', $clauses, [
+            'paginate' => $paginate,
+            'page' => $page
+        ],true, false);
     }
 
 
