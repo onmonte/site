@@ -85,6 +85,8 @@ class Api
         $params = [
             'clauses' => $clauses,
             'data' => $data,
+            'host' => $_SERVER['HTTP_HOST'],
+            'url' => sprintf('%s://%s/%s',isset($_SERVER['HTTPS']) ? 'https' : 'http', $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])
         ];
 
         if ($c->isCached($uniqueKey) && $cache) {
