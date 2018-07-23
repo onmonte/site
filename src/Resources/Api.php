@@ -89,6 +89,12 @@ class Api
             'url' => sprintf('%s://%s/%s',isset($_SERVER['HTTPS']) ? 'https' : 'http', $_SERVER['HTTP_HOST'], trim($_SERVER['REQUEST_URI'], '/'))
         ];
 
+        if ($route == '/clear') {
+            $c->eraseAll();
+
+            return true;
+        }
+
         if ($c->isCached($uniqueKey) && $cache) {
             $data = $c->retrieve($uniqueKey);
 
