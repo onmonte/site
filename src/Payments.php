@@ -7,6 +7,16 @@ use Monte\Resources\Api;
 class Payments extends Api
 {
 
+    public static function isStripeConnected()
+    {
+        return self::request('/payments/is-stripe-connected', [], [], false, false);
+    }
+
+    public static function isStripeLive()
+    {
+        return self::request('/payments/is-stripe-live', [], [], false, false);
+    }
+
     public static function createCardCustomer($cardholderName, $cardholderEmail, $cardToken)
     {
         return self::request('/payments/create-card-customer', [], [
