@@ -20,11 +20,11 @@ class Api
     protected static function setVariables()
     {
         if (empty(Api::$apiSiteDomain)) {
-            Api::$apiSiteDomain = $_SERVER['HTTP_HOST'];
+            Api::$apiSiteDomain = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'onmonte.com';
 
             if (Api::$apiSiteDomain == 'onmonte.com' && !empty($_GET['fd'])) {
                 Api::$apiSiteDomain = $_GET['fd'];
-            } elseif (Api::$apiSiteDomain == 'onmonte.com') {
+            } elseif (Api::$apiSiteDomain == 'onmonte.com' && !empty($_SERVER['REQUEST_URI'])) {
                 $segments = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
 
                 if (!empty($segments) && $segments[0] == 'admin' && !empty($segments[1])) {
